@@ -80,17 +80,55 @@ module Enumerable
 
   end
 
-  def my_map
+  # no proc
+  # def my_map
+  #   new_a = []
+  #   self.my_each do |element|
+  #     new_a << yield(element)
+  #   end
+
+  #   new_a
+  # end
+
+  # take a proc
+  # def my_map pr
+  #   new_a = []
+  #   self.my_each do |element|
+  #     new_a << pr.call(element)
+  #   end
+
+  #   new_a
+  # end
+
+  # accepts either block or proc
+  def my_map pr=nil
     new_a = []
+
     self.my_each do |element|
-      new_a << yield(element)
+      unless block_given?
+        new_a << pr.call(element)
+      else
+        new_a << yield(element)
+      end
     end
 
     new_a
   end
 
-  def my_inject init=self.first
-    # code goes here
+  def my_inject init=nil
+    if init
+      total = init
+      start_index = 0
+    else
+      total = self.first
+      start_index = 1
+    end
+
+    self[start_index...self.length].my_each do |element|
+      total = yield(total, element)
+    end
+
+    total
   end
 
 end
@@ -154,8 +192,24 @@ end
 # p [1, 2, 3].my_map {|n| n * 3 }  # => [3, 6, 9]
 
 # ----------inject vs. my_inject ----------
-p [2, 3, 4, 5].inject {|result, item| result + item }        #=> 14
-p [2, 3, 4, 5].inject(0) {|result, item| result + item**2 }  #=> 54
+# p [2, 3, 4, 5].inject {|result, item| result + item }        #=> 14
+# p [2, 3, 4, 5].inject(0) {|result, item| result + item**2 }  #=> 54
 
-p [2, 3, 4, 5].my_inject {|result, item| result + item }        #=> 14
-p [2, 3, 4, 5].my_inject(0) {|result, item| result + item**2 }  #=> 54
+# p [2, 3, 4, 5].my_inject {|result, item| result + item }        #=> 14
+# p [2, 3, 4, 5].my_inject(0) {|result, item| result + item**2 }  #=> 54
+
+# def multiply_els array
+#   array.my_inject { |result, item| result * item }
+# end
+
+# multiply_els([2,4,5]) #=> 40
+
+# ---- my_map takes a proc or a block ----
+
+my_proc = proc {|n| n * 3 }
+
+p [1, 2, 3].my_map my_proc  # => [3, 6, 9]
+
+p [1, 2, 3].my_map {|n| n * 3 }  # => [3, 6, 9]
+
+p [1, 2, 3].my_map {|n| n * 3 }.my_map my_proc # => [9, 18, 27]
