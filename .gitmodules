@@ -1,3 +1,0 @@
-[submodule "event_manager"]
-	path = event_manager_cp
-	url = git@github.com:AndrewHuntington/ruby_projects.git
