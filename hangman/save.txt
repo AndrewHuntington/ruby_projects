@@ -1,0 +1,1 @@
+{	:tries_lefti:guessed_letters[I"G:ET:secret_word[I"G;TI"L;TI"A;TI"D;TI"Y;TI"S;T:blank_word[@I"_;TI"_;TI"_;TI"_;TI"_;T
