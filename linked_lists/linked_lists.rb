@@ -87,6 +87,19 @@ class LinkedList
   ########## EXTRA CREDIT ##########
   def insert_at(value, index)
     # inserts the node with the provided value at the given index
+
+    # only allow index numbers within range
+    if index >= @list.length || index < 0
+      raise ArgumentError, "Whoops! #{index} is out of bounds!"
+    end
+
+    @list[index..@list.length].each do |node|
+      node[1] += 1 unless node[1].nil?
+    end
+
+    node = Node.new(value, index + 1)
+
+    @list.insert(index,  [node.value, node.next_node])
   end
 
   def remove_at(index)
@@ -129,9 +142,25 @@ puts "Node contains 'pascal': #{list.contains?("pascal")}\n\n"
 puts "Node has found 'ruby' at index: #{list.find("ruby")}"
 puts "Node has found 'bash' at index: #{list.find("bash")}\n\n"
 
+# #test #insert_at (pass: normal)
+# puts "Inserting 'basic' at index 2..."
+# list.insert_at('basic', 2)
+
+# #test #insert_at (edge case: insert at tail)
+# puts "Inserting 'basic' at index 4..."
+# list.insert_at('basic', 4)
+
+#test #insert_at (edge case: insert at head)
+puts "Inserting 'basic' at index 0..."
+list.insert_at('basic', 0)
+
+# # test #insert_at (fail" out-of-bounds)
+# puts "Inserting 'fortran' at index 100..."
+# list.insert_at('basic', 100)
+
 # print and inspect the contents of the list
-p list
 puts
+p list
 puts
 
 # test #pop
