@@ -69,7 +69,7 @@ class LinkedList
   def find(value)
     # returns the index of the node containing value, or nil if not found
     @list.each do |node|
-      return node[1]-1 if node.include?(value)
+      return @list.index(node) if node.include?(value)
     end
 
     nil
@@ -93,18 +93,35 @@ class LinkedList
       raise ArgumentError, "Whoops! #{index} is out of bounds!"
     end
 
-    @list[index..@list.length].each do |node|
+    # update links of nodes in the list after an insertion
+    @list[index..-1].each do |node|
       node[1] += 1 unless node[1].nil?
     end
 
     node = Node.new(value, index + 1)
 
-    @list.insert(index,  [node.value, node.next_node])
+    @list.insert(index, [node.value, node.next_node])
   end
 
   def remove_at(index)
     # removes the node at the given index
-    # note: need to update links of nodes in the list after a removal
+
+    # only allow index numbers within range
+    if index >= @list.length || index < 0
+      raise ArgumentError, "Whoops! #{index} is out of bounds!"
+    end
+
+    if index == @list.length-1
+      pop
+    else
+      @list.delete_at(index)
+    end
+
+    # update links of nodes in the list after a removal
+    @list[index..-1].each do |node|
+      node[1] -= 1 unless node[1].nil?
+    end
+
   end
 end
 
@@ -138,23 +155,23 @@ puts "Node at index 1 is #{list.at(1)}\n\n"
 puts "Node contains 'c++': #{list.contains?("c++")}"
 puts "Node contains 'pascal': #{list.contains?("pascal")}\n\n"
 
-#test #contains?
-puts "Node has found 'ruby' at index: #{list.find("ruby")}"
-puts "Node has found 'bash' at index: #{list.find("bash")}\n\n"
+#test #find?
+puts "Found 'ruby' at index: #{list.find("ruby")}"     # pass
+puts "Found 'bash' at index: #{list.find("bash")}\n\n" # fail
 
 # #test #insert_at (pass: normal)
 # puts "Inserting 'basic' at index 2..."
 # list.insert_at('basic', 2)
 
-# #test #insert_at (edge case: insert at tail)
-# puts "Inserting 'basic' at index 4..."
-# list.insert_at('basic', 4)
+#test #insert_at (edge case: insert at tail)
+puts "Inserting 'basic' at index #{list.find(list.tail[0])}..."
+list.insert_at('basic', list.find(list.tail[0]))
 
-#test #insert_at (edge case: insert at head)
-puts "Inserting 'basic' at index 0..."
-list.insert_at('basic', 0)
+# #test #insert_at (edge case: insert at head)
+# puts "Inserting 'basic' at index 0..."
+# list.insert_at('basic', 0)
 
-# # test #insert_at (fail" out-of-bounds)
+# # test #insert_at (fail: out-of-bounds)
 # puts "Inserting 'fortran' at index 100..."
 # list.insert_at('basic', 100)
 
@@ -164,8 +181,36 @@ p list
 puts
 
 # test #pop
-puts "Popping off the last node: #{list.tail}\n\n"
+puts "Popping off the last node: #{list.tail}"
 list.pop
 list.to_s
 puts
+p list
+puts
+
+# test #remove_at (normal)
+puts "Removing node: #{list.at(2)} at index: 2..."
+list.remove_at(2)
+list.to_s
+puts
+
+# # test #remove_at (edge case: head)
+# puts "Removing node: #{list.head} at index: 0..."
+# list.remove_at(0)
+# list.to_s
+# puts
+
+# # test #remove_at (edge case: tail)
+# puts "Removing node: #{list.tail} at index: #{list.find(list.tail[0])}..."
+# list.remove_at(list.find(list.tail[0]))
+# list.to_s
+# puts
+
+# # test #remove_at (fail: out of bounds)
+# puts "Removing node: #{list.at(100)} at index: 100..."
+# list.remove_at(100)
+# list.to_s
+# puts
+
+# final print and inspect
 p list
