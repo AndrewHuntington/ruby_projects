@@ -1,6 +1,23 @@
+class Node
+  attr_accessor :value, :next_node
+
+  def initialize(value=nil, next_node=nil)
+    @value = value
+    @next_node = next_node
+  end
+end
+
 class LinkedList
+  def initialize
+    @list = []
+  end
+
   def append(value)
     # adds a new node containing value to the end of the list
+    node = Node.new(value)
+    @list << [node.value, node.next_node]
+
+    @list[-2][1] = @list.length-1 if @list.length > 1
   end
 
   def prepend(value)
@@ -9,6 +26,7 @@ class LinkedList
 
   def size
     # returns the total number of nodes in the list
+    @list.length
   end
 
   def head
@@ -40,6 +58,10 @@ class LinkedList
   def to_s
     # represents your LinkedList objects as strings, so you can print them out and preview them in the console
     # format: ( value  ) -> ( value ) -> ( value ) -> nil
+    @list.each do |node|
+      print "( #{node[0]} ) -> "
+    end
+    print "nil\n"
   end
 
   ########## EXTRA CREDIT ##########
@@ -53,11 +75,18 @@ class LinkedList
   end
 end
 
-class Node
-  attr_accessor :value, :node
+list = LinkedList.new
 
-  def initialize(value, next_node)
-    @value = nil
-    @next_node = nil
-  end
-end
+# test #append
+list.append("ruby")
+list.append("javascript")
+list.append("c++")
+
+# test #t0_s
+list.to_s
+
+# test #size
+puts "List size is: #{list.size}\n\n"
+
+# print and inspect the contents of the list
+p list
