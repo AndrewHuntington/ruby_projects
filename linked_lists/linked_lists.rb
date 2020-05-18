@@ -1,11 +1,4 @@
-class Node
-  attr_accessor :value, :next_node
-
-  def initialize(value=nil, next_node=nil)
-    @value = value
-    @next_node = next_node
-  end
-end
+require "./node"
 
 class LinkedList
   attr_accessor :head, :tail
@@ -178,9 +171,23 @@ class LinkedList
     # removes the node at the given index
 
     # only allow index numbers within range
+    return nil                      if index >= size || index < 0
+    return pop                      if index == size-1
+    return @head = @head.next_node  if index == 0
 
     # update links of nodes in the list after a removal
+    current_head = @head
+    count = 0
 
+    while count < index
+      prev_head = current_head
+      current_head = current_head.next_node
+
+      count += 1
+    end
+
+    current_head = current_head.next_node
+    prev_head.next_node = current_head
   end
 end
 
@@ -197,55 +204,55 @@ list.prepend("python")
 
 # test #to_s
 list.to_s
-puts "----------------"
-p list
+# puts "----------------"
+# p list
 
-# test #size
-puts "List size is: #{list.size}\n\n"
+# # test #size
+# puts "List size is: #{list.size}\n\n"
 
-# #test #head
-puts "Head is #{list.head}\n\n"
+# # #test #head
+# puts "Head is #{list.head}\n\n"
 
-# #test #tail
-puts "Tail is #{list.tail}\n\n"
+# # #test #tail
+# puts "Tail is #{list.tail}\n\n"
 
-#test #at
-puts "Node at index 1 is #{list.at(1)}\n\n"      # pass
-puts "Node at index 100 is #{list.at(100)}\n\n"  # fail
+# #test #at
+# puts "Node at index 1 is #{list.at(1)}\n\n"      # pass
+# puts "Node at index 100 is #{list.at(100)}\n\n"  # fail
 
-#test #contains?
-puts "List contains 'c++': #{list.contains?("c++")}"  # pass
-puts "List contains 'pascal': #{list.contains?("pascal")}\n\n" # fail
+# #test #contains?
+# puts "List contains 'c++': #{list.contains?("c++")}"  # pass
+# puts "List contains 'pascal': #{list.contains?("pascal")}\n\n" # fail
 
-#test #find?
-puts "Found 'ruby' at index: #{list.find("ruby")}"     # pass
-puts "Found 'bash' at index: #{list.find("bash")}\n\n" # fail
+# #test #find?
+# puts "Found 'ruby' at index: #{list.find("ruby")}"     # pass
+# puts "Found 'bash' at index: #{list.find("bash")}\n\n" # fail
 
-# test #insert_at (pass: normal)
-puts "Inserting 'basic' at index 2..."
-list.insert_at('basic', 2)
+# # test #insert_at (pass: normal)
+# puts "Inserting 'basic' at index 2..."
+# list.insert_at('basic', 2)
 
-# test #insert_at (edge case: insert at tail)
-puts "Inserting 'swift' at index #{list.find(list.tail)}..."
-list.insert_at('swift', list.find(list.tail))
+# # test #insert_at (edge case: insert at tail)
+# puts "Inserting 'swift' at index #{list.find(list.tail)}..."
+# list.insert_at('swift', list.find(list.tail))
 
-# test #insert_at (edge case: insert at end)
-puts "Inserting 'visual basic' at index #{list.find(list.tail)+1}..."
-list.insert_at('visual basic', list.find(list.tail)+1)
+# # test #insert_at (edge case: insert at end)
+# puts "Inserting 'visual basic' at index #{list.find(list.tail)+1}..."
+# list.insert_at('visual basic', list.find(list.tail)+1)
 
-#test #insert_at (edge case: insert at head)
-puts "Inserting 'css' at index 0..."
-list.insert_at('css', 0)
+# #test #insert_at (edge case: insert at head)
+# puts "Inserting 'css' at index 0..."
+# list.insert_at('css', 0)
 
-# test #insert_at (fail: out-of-bounds)
-puts "Inserting 'fortran' at index 100..."
-list.insert_at('basic', 100)
+# # # test #insert_at (fail: out-of-bounds)
+# # puts "Inserting 'fortran' at index 100..."
+# # list.insert_at('basic', 100)
 
-# print and inspect the contents of the list
-list.to_s
-puts
-p list
-puts
+# # print and inspect the contents of the list
+# list.to_s
+# puts
+# p list
+# puts
 
 # # test #pop
 # puts "Popping off the last node: #{list.tail}"
@@ -261,15 +268,15 @@ puts
 # list.to_s
 # puts
 
-# # # test #remove_at (edge case: head)
-# # puts "Removing node: #{list.head} at index: 0..."
-# # list.remove_at(0)
-# # list.to_s
-# # puts
+# # test #remove_at (edge case: head)
+# puts "Removing node: #{list.head} at index: 0..."
+# list.remove_at(0)
+# list.to_s
+# puts
 
 # # # test #remove_at (edge case: tail)
-# # puts "Removing node: #{list.tail} at index: #{list.find(list.tail[0])}..."
-# # list.remove_at(list.find(list.tail[0]))
+# # puts "Removing node: #{list.tail} at index: #{list.find(list.tail)}..."
+# # list.remove_at(list.find(list.tail))
 # # list.to_s
 # # puts
 
