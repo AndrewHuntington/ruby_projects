@@ -154,9 +154,24 @@ class LinkedList
     # inserts the node with the provided value at the given index
 
     # only allow index numbers within range
+    return nil if index < 0 || index > size
+    return append(value)  if index == size
+    return prepend(value) if index == 0
 
     # update links of nodes in the list after an insertion
+   current_head = @head
+   count = 0
+   node = Node.new(value)
 
+   while count < index
+    prev_head = current_head
+    current_head = current_head.next_node
+
+    count += 1
+   end
+
+   prev_head.next_node = node
+   node.next_node = current_head
   end
 
   def remove_at(index)
@@ -206,40 +221,39 @@ puts "List contains 'pascal': #{list.contains?("pascal")}\n\n" # fail
 puts "Found 'ruby' at index: #{list.find("ruby")}"     # pass
 puts "Found 'bash' at index: #{list.find("bash")}\n\n" # fail
 
-# # #test #insert_at (pass: normal)
-# # puts "Inserting 'basic' at index 2..."
-# # list.insert_at('basic', 2)
+# test #insert_at (pass: normal)
+puts "Inserting 'basic' at index 2..."
+list.insert_at('basic', 2)
 
-# #test #insert_at (edge case: insert at tail)
-# puts "Inserting 'basic' at index #{list.find(list.tail[0])}..."
-# list.insert_at('basic', list.find(list.tail[0]))
+# test #insert_at (edge case: insert at tail)
+puts "Inserting 'swift' at index #{list.find(list.tail)}..."
+list.insert_at('swift', list.find(list.tail))
 
-# # #test #insert_at (edge case: insert at head)
-# # puts "Inserting 'basic' at index 0..."
-# # list.insert_at('basic', 0)
+# test #insert_at (edge case: insert at end)
+puts "Inserting 'visual basic' at index #{list.find(list.tail)+1}..."
+list.insert_at('visual basic', list.find(list.tail)+1)
 
-# # # test #insert_at (fail: out-of-bounds)
-# # puts "Inserting 'fortran' at index 100..."
-# # list.insert_at('basic', 100)
+#test #insert_at (edge case: insert at head)
+puts "Inserting 'css' at index 0..."
+list.insert_at('css', 0)
 
-# # print and inspect the contents of the list
+# test #insert_at (fail: out-of-bounds)
+puts "Inserting 'fortran' at index 100..."
+list.insert_at('basic', 100)
+
+# print and inspect the contents of the list
+list.to_s
+puts
+p list
+puts
+
+# # test #pop
+# puts "Popping off the last node: #{list.tail}"
+# list.pop
+# list.to_s
 # puts
 # p list
 # puts
-
-# test #pop
-puts "Popping off the last node: #{list.tail}"
-list.pop
-list.to_s
-puts
-p list
-puts
-puts "Popping off the last node again: #{list.tail}"
-list.pop
-list.to_s
-puts
-p list
-puts
 
 # # test #remove_at (normal)
 # puts "Removing node: #{list.at(2)} at index: 2..."
