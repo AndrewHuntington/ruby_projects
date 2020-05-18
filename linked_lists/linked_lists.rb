@@ -8,59 +8,110 @@ class Node
 end
 
 class LinkedList
+  attr_accessor :head, :tail
+
   def initialize
-    @list = []
+    @head = nil
+    @tail = nil
   end
 
   def append(value)
     # adds a new node containing value to the end of the list
-    node = Node.new(value)
-    @list << [node.value, node.next_node]
+    return prepend(value) if @head.nil?
 
-    @list[-2][1] = @list.length-1 if @list.length > 1
+    node = Node.new(value)
+
+    if !@tail.nil?
+      current_tail = @tail
+      @tail = node
+      current_tail.next_node = @tail
+    else
+       @tail = node
+       @head.next_node = @tail
+    end
   end
 
   def prepend(value)
     # add a new node containing value to the start of the list
-    @list.each do |node|
-      node[1] +=1 unless node[1].nil?
-    end
+     node = Node.new(value)
 
-    node = Node.new(value, 1)
-    @list.unshift([node.value, node.next_node])
+    if !@head.nil? && !@tail.nil?
+      current_head = @head
+      @head = node
+      @head.next_node = current_head
+    elsif !@head.nil? && @tail.nil?
+      @tail = @head
+      @head = node
+      @head.next_node = @tail
+    else
+      @head = node
+    end
   end
 
   def size
     # returns the total number of nodes in the list
-    @list.length
+    current_head = @head
+    count = 0
+
+    loop do
+      count += 1
+      current_head = current_head.next_node
+      break if current_head.nil?
+    end
+
+    count
   end
 
   def head
     # returns the first node in the list
-    @list.first
+    @head.value
   end
 
   def tail
     # returns the last node in the list
-    @list.last
+    @tail.value
   end
 
   def at(index)
-    # returns the node at the given index
-    @list[index]
+    # returns the node at the given index (starting from 0)
+    return head if index == 0
+    return "index is out of bounds" if index > size
+
+    current_head = @head
+    count = 0
+
+    while count < index
+      current_head = current_head.next_node
+      count += 1
+    end
+
+    current_head.value
   end
 
   def pop
     # removes the last element from the list
-    @list.pop
+    current_head = @head
 
-    @list[-1][1] = nil if @list.length > 1
+    while current_head.next_node.value != @tail.value
+      current_head = current_head.next_node
+    end
+
+    @tail = current_head
+    @tail.next_node = nil
   end
 
   def contains?(value)
     # returns true if the passed in value is in the list and otherwise returns false
-    @list.each do |node|
-      return true if node.include?(value)
+
+    current_head = @head
+
+    loop do
+      if current_head.value == value
+        return true
+      end
+
+      current_head = current_head.next_node
+      break if current_head.nil?
     end
 
     false
@@ -68,8 +119,18 @@ class LinkedList
 
   def find(value)
     # returns the index of the node containing value, or nil if not found
-    @list.each do |node|
-      return @list.index(node) if node.include?(value)
+    current_head = @head
+    count = 0
+
+    loop do
+      if current_head.value == value
+        return count
+      end
+
+      current_head = current_head.next_node
+      break if current_head.nil?
+
+      count += 1
     end
 
     nil
@@ -78,8 +139,12 @@ class LinkedList
   def to_s
     # represents your LinkedList objects as strings, so you can print them out and preview them in the console
     # format: ( value  ) -> ( value ) -> ( value ) -> nil
-    @list.each do |node|
-      print "( #{node[0]} ) -> "
+    current_head = @head
+
+    loop do
+      print "( #{current_head.value} ) -> "
+      current_head = current_head.next_node
+      break if current_head.nil?
     end
     print "nil\n"
   end
@@ -89,38 +154,17 @@ class LinkedList
     # inserts the node with the provided value at the given index
 
     # only allow index numbers within range
-    if index >= @list.length || index < 0
-      raise ArgumentError, "Whoops! #{index} is out of bounds!"
-    end
 
     # update links of nodes in the list after an insertion
-    @list[index..-1].each do |node|
-      node[1] += 1 unless node[1].nil?
-    end
 
-    node = Node.new(value, index + 1)
-
-    @list.insert(index, [node.value, node.next_node])
   end
 
   def remove_at(index)
     # removes the node at the given index
 
     # only allow index numbers within range
-    if index >= @list.length || index < 0
-      raise ArgumentError, "Whoops! #{index} is out of bounds!"
-    end
-
-    if index == @list.length-1
-      pop
-    else
-      @list.delete_at(index)
-    end
 
     # update links of nodes in the list after a removal
-    @list[index..-1].each do |node|
-      node[1] -= 1 unless node[1].nil?
-    end
 
   end
 end
@@ -136,49 +180,52 @@ list.append("c++")
 list.prepend("c#")
 list.prepend("python")
 
-# test #t0_s
+# test #to_s
 list.to_s
+puts "----------------"
+p list
 
 # test #size
 puts "List size is: #{list.size}\n\n"
 
-#test #head
+# #test #head
 puts "Head is #{list.head}\n\n"
 
-#test #tail
+# #test #tail
 puts "Tail is #{list.tail}\n\n"
 
 #test #at
-puts "Node at index 1 is #{list.at(1)}\n\n"
+puts "Node at index 1 is #{list.at(1)}\n\n"      # pass
+puts "Node at index 100 is #{list.at(100)}\n\n"  # fail
 
 #test #contains?
-puts "Node contains 'c++': #{list.contains?("c++")}"
-puts "Node contains 'pascal': #{list.contains?("pascal")}\n\n"
+puts "List contains 'c++': #{list.contains?("c++")}"  # pass
+puts "List contains 'pascal': #{list.contains?("pascal")}\n\n" # fail
 
 #test #find?
 puts "Found 'ruby' at index: #{list.find("ruby")}"     # pass
 puts "Found 'bash' at index: #{list.find("bash")}\n\n" # fail
 
-# #test #insert_at (pass: normal)
-# puts "Inserting 'basic' at index 2..."
-# list.insert_at('basic', 2)
+# # #test #insert_at (pass: normal)
+# # puts "Inserting 'basic' at index 2..."
+# # list.insert_at('basic', 2)
 
-#test #insert_at (edge case: insert at tail)
-puts "Inserting 'basic' at index #{list.find(list.tail[0])}..."
-list.insert_at('basic', list.find(list.tail[0]))
+# #test #insert_at (edge case: insert at tail)
+# puts "Inserting 'basic' at index #{list.find(list.tail[0])}..."
+# list.insert_at('basic', list.find(list.tail[0]))
 
-# #test #insert_at (edge case: insert at head)
-# puts "Inserting 'basic' at index 0..."
-# list.insert_at('basic', 0)
+# # #test #insert_at (edge case: insert at head)
+# # puts "Inserting 'basic' at index 0..."
+# # list.insert_at('basic', 0)
 
-# # test #insert_at (fail: out-of-bounds)
-# puts "Inserting 'fortran' at index 100..."
-# list.insert_at('basic', 100)
+# # # test #insert_at (fail: out-of-bounds)
+# # puts "Inserting 'fortran' at index 100..."
+# # list.insert_at('basic', 100)
 
-# print and inspect the contents of the list
-puts
-p list
-puts
+# # print and inspect the contents of the list
+# puts
+# p list
+# puts
 
 # test #pop
 puts "Popping off the last node: #{list.tail}"
@@ -187,30 +234,36 @@ list.to_s
 puts
 p list
 puts
-
-# test #remove_at (normal)
-puts "Removing node: #{list.at(2)} at index: 2..."
-list.remove_at(2)
+puts "Popping off the last node again: #{list.tail}"
+list.pop
 list.to_s
 puts
-
-# # test #remove_at (edge case: head)
-# puts "Removing node: #{list.head} at index: 0..."
-# list.remove_at(0)
-# list.to_s
-# puts
-
-# # test #remove_at (edge case: tail)
-# puts "Removing node: #{list.tail} at index: #{list.find(list.tail[0])}..."
-# list.remove_at(list.find(list.tail[0]))
-# list.to_s
-# puts
-
-# # test #remove_at (fail: out of bounds)
-# puts "Removing node: #{list.at(100)} at index: 100..."
-# list.remove_at(100)
-# list.to_s
-# puts
-
-# final print and inspect
 p list
+puts
+
+# # test #remove_at (normal)
+# puts "Removing node: #{list.at(2)} at index: 2..."
+# list.remove_at(2)
+# list.to_s
+# puts
+
+# # # test #remove_at (edge case: head)
+# # puts "Removing node: #{list.head} at index: 0..."
+# # list.remove_at(0)
+# # list.to_s
+# # puts
+
+# # # test #remove_at (edge case: tail)
+# # puts "Removing node: #{list.tail} at index: #{list.find(list.tail[0])}..."
+# # list.remove_at(list.find(list.tail[0]))
+# # list.to_s
+# # puts
+
+# # # test #remove_at (fail: out of bounds)
+# # puts "Removing node: #{list.at(100)} at index: 100..."
+# # list.remove_at(100)
+# # list.to_s
+# # puts
+
+# # final print and inspect
+# p list
