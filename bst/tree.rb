@@ -1,15 +1,28 @@
 require "./node"
 
 class Tree
-  attr :root
+  attr_accessor :root
 
   def initialize(array)
-    @array = array
+    # strip out duplicate entries and sort array as per instructions
+    @array  = array.uniq.sort
+    @root   = build_tree(@array)
   end
 
-  def build_tree
+  def build_tree(array)
     # Takes an array of data and turns it into a balanced binary tree full Node objects appropriately placed
     # Should return the level-1 root node
+    root_element  = (array.length/2).floor
+    root          = Node.new(array[root_element])
+    return root if root_element == 0
+
+    left_array    = array[0..root_element-1]
+    right_array   = array[root_element+1..-1]
+
+    root.left  = build_tree(left_array)
+    root.right = build_tree(right_array)
+
+    root
   end
 
   def insert
@@ -69,3 +82,5 @@ class Tree
     # Rebalances an unbalanced tree
   end
 end
+
+bst = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
