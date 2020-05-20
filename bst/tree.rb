@@ -31,8 +31,7 @@ class Tree
     pointer = @root
 
     # update the array to include new values
-    @array << value
-    @array.sort!
+    @array.push(value).sort!
 
     loop do
       if node >= pointer
