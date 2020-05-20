@@ -13,7 +13,7 @@ class Tree
     # Takes an array of data and turns it into a balanced binary tree full Node objects appropriately placed
     # Should return the level-1 root node
     root_element  = (array.length/2).floor
-    root          = Node.new(array[root_element])
+    root = Node.new(array[root_element]) unless array[root_element].nil?
     return root if root_element == 0
 
     left_array    = array[0..root_element-1]
@@ -25,11 +25,35 @@ class Tree
     root
   end
 
-  def insert
+  def insert(value)
     #  Accepts a value to insert
+    node    = Node.new(value)
+    pointer = @root
+
+    # update the array to include new values
+    @array << value
+    @array.sort!
+
+    loop do
+      if node >= pointer
+        if !pointer.right.nil?
+          pointer = pointer.right
+        else
+          pointer.right = node
+          break
+        end
+      else
+        if !pointer.left.nil?
+          pointer = pointer.left
+        else
+          pointer.left = node
+          break
+        end
+      end
+    end
   end
 
-  def delete
+  def delete(value)
     # Accepts a value to delete
     # Must deal with several cases such as when a node has children or not
   end
