@@ -71,8 +71,9 @@ class Tree
     # node w/1 child
     # node w/2 children (including root)
 
-    # this works, but may not be in the spirit of the challenge
-    @root = build_tree(@array)
+
+    # this works, but may not be in the spirit of the challenge...
+    # @root = build_tree(@array)
   end
 
   def find(value)
