@@ -61,17 +61,33 @@ class Tree
   def delete(value)
     # Accepts a value to delete
     # Must deal with several cases such as when a node has children or not
-    pointer = find(value)
+    pointer = @root
 
     # update the array to include new values
     @array.delete(value)
     
     # 3 cases:
-    # leaf node (no child nodes)
-    # node w/1 child
-    # node w/2 children (including root)
+    # case 1: leaf node (no child nodes)
+    # case 2: node w/1 child
+    # case 3: node w/2 children (including root)
 
+    # find the node before the value to be deleted
+    while pointer.left.data != value && pointer.right.data != value
+      if value < pointer.data
+        pointer = pointer.left
+      else
+        pointer = pointer.right
+      end
+    end
 
+    # handle case 1
+    if pointer.left.data == value
+      pointer.left = nil
+    elsif pointer.right.data == value
+      pointer.right = nil
+    end
+
+    self
     # this works, but may not be in the spirit of the challenge...
     # @root = build_tree(@array)
   end
