@@ -61,24 +61,40 @@ class Tree
   def delete(value)
     # Accepts a value to delete
     # Must deal with several cases such as when a node has children or not
+    pointer = find(value)
+
+    # update the array to include new values
+    @array.delete(value)
+    
+    # 3 cases:
+    # leaf node (no child nodes)
+    # node w/1 child
+    # node w/2 children (including root)
+
+    # this works, but may not be in the spirit of the challenge
+    @root = build_tree(@array)
+  end
+
+  def find(value)
+    # Accepts a value and returns the node with the given value
 
     # raise an ArgumentError if bst doesn't include value
     if !@array.include?(value)
       raise ArgumentError, "Cannot find value in tree"
-    end 
-
-    # update the array to include new values
-    @array.delete(value)
+    end
 
     pointer = @root
 
-    # if pointer.data == value then
+    # travel the tree to find the node to remove
+    while pointer.data != value
+      if value < pointer.data
+        pointer = pointer.left
+      else
+        pointer = pointer.right
+      end
+    end
 
-
-  end
-
-  def find
-    # Accepts a value and returns the node with the given value
+    pointer
   end
 
   # breadth-first traversal
