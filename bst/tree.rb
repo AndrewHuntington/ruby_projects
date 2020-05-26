@@ -27,14 +27,20 @@ class Tree
 
   def insert(value)
     #  Accepts a value to insert
-    node    = Node.new(value)
-    pointer = @root
+
+    # raise an ArgumentError if bst includes value to keep all values unique
+    if @array.include?(value)
+      raise ArgumentError, "Sorry, you cannot add duplicate values"
+    end 
 
     # update the array to include new values
     @array.push(value).sort!
 
+    node    = Node.new(value)
+    pointer = @root
+
     loop do
-      if node >= pointer
+      if node > pointer
         if !pointer.right.nil?
           pointer = pointer.right
         else
@@ -55,6 +61,20 @@ class Tree
   def delete(value)
     # Accepts a value to delete
     # Must deal with several cases such as when a node has children or not
+
+    # raise an ArgumentError if bst doesn't include value
+    if !@array.include?(value)
+      raise ArgumentError, "Cannot find value in tree"
+    end 
+
+    # update the array to include new values
+    @array.delete(value)
+
+    pointer = @root
+
+    # if pointer.data == value then
+
+
   end
 
   def find
