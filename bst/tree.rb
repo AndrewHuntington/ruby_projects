@@ -61,6 +61,12 @@ class Tree
   def delete(value)
     # Accepts a value to delete
     # Must deal with several cases such as when a node has children or not
+
+    # raise an ArgumentError if bst doesn't include value
+    if !@array.include?(value)
+      raise ArgumentError, "Sorry, value can't be found"
+    end 
+
     pointer = @root
 
     # find the node before the value to be deleted
@@ -107,7 +113,7 @@ class Tree
       pointer.data = right_min.data
     end
 
-    # update the array to include new values
+    # update the array to remove values
     @array.delete(value)
 
     self
@@ -181,6 +187,10 @@ class Tree
   def inorder(pointer = @root, inorder_values = [])
     # Traverses the tree
     # Returns an array of values
+
+    # NOTE: This method is redundent due to already keeping track of all values
+    # in a sorted array "behind the scenes." I included the logic here in the
+    # spirit of completing the challenge.
     pointer = pointer
     return if pointer.nil?
 
@@ -222,10 +232,12 @@ class Tree
 
   def balanced?
     # Checks if the tree is balanced
+    
   end
 
   def rebalance!
     # Rebalances an unbalanced tree
+    @root = build_tree(@array)
   end
 end
 
