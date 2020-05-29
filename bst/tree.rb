@@ -4,13 +4,14 @@ class Tree
   attr_accessor :root
 
   def initialize(array)
-    # strip out duplicate entries and sort array as per instructions
+    # Strip out duplicate entries and sort array as per instructions
     @array  = array.uniq.sort
     @root   = build_tree(@array)
   end
 
   def build_tree(array)
-    # Takes an array of data and turns it into a balanced binary tree full Node objects appropriately placed
+    # Takes an array of data and turns it into a balanced binary tree full of 
+    # Node objects appropriately placed
     # Should return the level-1 root node
     root_element  = (array.length/2).floor
     root = Node.new(array[root_element]) unless array[root_element].nil?
@@ -222,17 +223,24 @@ class Tree
 
   def depth(node)
     # Accepts a node and returns the depth(number of levels) beneath the node
-    pointer = find(node)
-    
-    pointer.left ? left  = depth(pointer.left.data) : left = -1
-    pointer.right ? right = depth(pointer.right.data) : right = -1
+    node.left ? left  = depth(node.left) : left = -1
+    node.right ? right = depth(node.right) : right = -1
     
     return [left, right].max + 1
   end
 
-  def balanced?
+  def balanced? 
     # Checks if the tree is balanced
-    
+    case
+    when @root.nil?                                 # nil is balanced
+      true
+    when @root.left.nil? && @root.right.nil?        # a single node is balanced
+      true
+    when @root.right.nil? && depth(@root.left) == 0 # two nodes are balanced (?)
+      true
+    else
+      (depth(@root.left) - depth(@root.right)).abs <= 1
+    end
   end
 
   def rebalance!
