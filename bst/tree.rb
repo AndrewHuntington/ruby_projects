@@ -141,30 +141,76 @@ class Tree
   # breadth-first traversal
   def level_order
     # Returns an array of values in breadth-first level order
+    pointer = @root
+    queue = []
+    values_in_level_order = []
+
+    queue << pointer
+
+    while !queue.empty?
+      values_in_level_order << pointer.data
+
+      queue << pointer.left   unless pointer.left.nil?
+      queue << pointer.right  unless pointer.right.nil?
+
+      queue.shift
+      pointer = queue[0]
+    end
+    
+    values_in_level_order
   end 
 
-
   # depth-first traversal methods
-
   # DLR
-  def preorder
+  def preorder(pointer = @root, preorder_values = [])
     # Traverses the tree
     # Returns an array of values
+    pointer = pointer
+    return if pointer.nil?
+
+    preorder_values = preorder_values
+
+    preorder_values << pointer.data
+    preorder(pointer.left, preorder_values)
+    preorder(pointer.right, preorder_values)
+
+    preorder_values
   end
 
   # LDR
-  def inorder
+  def inorder(pointer = @root, inorder_values = [])
     # Traverses the tree
     # Returns an array of values
+    pointer = pointer
+    return if pointer.nil?
+
+    inorder_values = inorder_values
+
+    inorder(pointer.left, inorder_values)
+    inorder_values << pointer.data
+    inorder(pointer.right, inorder_values)
+    
+
+    inorder_values
   end
 
   #LRD
-  def postorder
+  def postorder(pointer = @root, postorder_values = [])
     # Traverses the tree
     # Returns an array of values
+    pointer = pointer
+    return if pointer.nil?
+
+    postorder_values = postorder_values
+
+    postorder(pointer.left, postorder_values)
+    postorder(pointer.right, postorder_values)
+    postorder_values << pointer.data
+    
+    postorder_values
   end
 
-  def depth
+  def depth(node)
     # Accepts a node and returns the depth(number of levels) beneath the node
   end
 
