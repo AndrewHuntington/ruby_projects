@@ -212,6 +212,12 @@ class Tree
 
   def depth(node)
     # Accepts a node and returns the depth(number of levels) beneath the node
+    pointer = find(node)
+    
+    pointer.left ? left  = depth(pointer.left.data) : left = -1
+    pointer.right ? right = depth(pointer.right.data) : right = -1
+    
+    return [left, right].max + 1
   end
 
   def balanced?
